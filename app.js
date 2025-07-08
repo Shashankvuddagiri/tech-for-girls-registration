@@ -166,7 +166,6 @@ document.addEventListener('DOMContentLoaded', function () {
       formMessage.textContent = 'Please upload a screenshot.';
       return;
     }
-
     const reader = new FileReader();
     reader.onload = function(event) {
       const base64String = event.target.result.split(',')[1]; // Remove data:*/*;base64, part
