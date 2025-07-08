@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tech for Girls Registration</title>
   <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
   <h1><center>Tech for Girls Community Registration</center></h1>
@@ -39,14 +40,21 @@
           Share on WhatsApp
         </button>
         <div class="share-progress">
-          <span id="shareCount">Click count: 0/5</span>
-          <progress id="shareProgress" value="0" max="5"></progress>
+          <span id="shareAnimatedCount">Click count: 0/5</span>
+          <div class="progress-bar"><div id="shareProgressBar" class="progress-bar-inner"></div></div>
         </div>
       </div>
       <button type="submit" id="submitBtn" disabled><center>Submit Registration</center></button>
       <div id="formMessage" class="form-message"></div>
     </form>
   </main>
+  <div id="thankYouModal">
+    <div class="modal-content">
+      <h2>🎉 Submission Successful!</h2>
+      <p>Thanks for being part of Tech for Girls!</p>
+      <button id="closeModalBtn">Close</button>
+    </div>
+  </div>
   <script src="app.js"></script>
 </body>
 </html> 

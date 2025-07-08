@@ -6,19 +6,42 @@
 
 document.addEventListener('DOMContentLoaded', function () {
   const shareBtn = document.getElementById('whatsappShare');
-  const shareCountSpan = document.getElementById('shareCount');
-  const shareProgress = document.getElementById('shareProgress');
+  const shareAnimatedCount = document.getElementById('shareAnimatedCount');
+  const shareProgressBar = document.getElementById('shareProgressBar');
   const submitBtn = document.getElementById('submitBtn');
   const formMessage = document.getElementById('formMessage');
   const form = document.getElementById('registrationForm');
   const screenshotInput = document.getElementById('screenshot');
+  const thankYouModal = document.getElementById('thankYouModal');
+  const closeModalBtn = document.getElementById('closeModalBtn');
 
   let shareCount = 0;
+  let animatedShareCount = 0;
   const maxShares = 5;
 
+  function animateShareCounter(target) {
+    const start = animatedShareCount;
+    const end = target;
+    const duration = 400;
+    const startTime = performance.now();
+    function animate(now) {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      animatedShareCount = Math.round(start + (end - start) * progress);
+      shareAnimatedCount.textContent = `Click count: ${animatedShareCount}/${maxShares}`;
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      } else {
+        animatedShareCount = end;
+      }
+    }
+    requestAnimationFrame(animate);
+  }
+
   function updateShareUI() {
-    shareCountSpan.textContent = `Click count: ${shareCount}/${maxShares}`;
-    shareProgress.value = shareCount;
+    animateShareCounter(shareCount);
+    const percent = (shareCount / maxShares) * 100;
+    shareProgressBar.style.width = percent + '%';
     if (shareCount >= maxShares) {
       shareBtn.disabled = true;
       shareBtn.textContent = 'Sharing complete';
@@ -38,6 +61,18 @@ document.addEventListener('DOMContentLoaded', function () {
       shareCount++;
       updateShareUI();
     }
+  });
+
+  // Modal logic
+  function showThankYouModal() {
+    thankYouModal.classList.add('active');
+  }
+  function hideThankYouModal() {
+    thankYouModal.classList.remove('active');
+  }
+  closeModalBtn.addEventListener('click', hideThankYouModal);
+  thankYouModal.addEventListener('click', function(e) {
+    if (e.target === thankYouModal) hideThankYouModal();
   });
 
   // Enforce single submission
@@ -154,8 +189,9 @@ document.addEventListener('DOMContentLoaded', function () {
       .then(data => {
         if (data.success) {
           form.querySelectorAll('input, select, button').forEach(el => el.disabled = true);
-          formMessage.textContent = '🎉 Your submission has been recorded. Thanks for being part of Tech for Girls!';
+          formMessage.textContent = '';
           localStorage.setItem('submitted', 'true');
+          showThankYouModal();
         } else {
           formMessage.textContent = data.message || 'Submission failed. Please try again.';
         }
