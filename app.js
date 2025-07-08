@@ -166,39 +166,46 @@ document.addEventListener('DOMContentLoaded', function () {
       formMessage.textContent = 'Please upload a screenshot.';
       return;
     }
-    // Collect form data
-    const formData = new FormData();
-    formData.append('name', form.name.value);
-    formData.append('phone', form.phone.value);
-    formData.append('email', form.email.value);
-    formData.append('college', form.college.value);
-    formData.append('department', form.department.value);
-    formData.append('screenshot', screenshotFile);
 
-    // Use endpoint from config.js
-    const endpoint = window.APP_CONFIG && window.APP_CONFIG.APPS_SCRIPT_URL;
-    if (!endpoint) {
-      formMessage.textContent = 'Configuration error: Apps Script endpoint not set.';
-      return;
-    }
-    fetch(endpoint, {
-      method: 'POST',
-      body: formData
-    })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          form.querySelectorAll('input, select, button').forEach(el => el.disabled = true);
-          formMessage.textContent = '';
-          localStorage.setItem('submitted', 'true');
-          showThankYouModal();
-        } else {
-          formMessage.textContent = data.message || 'Submission failed. Please try again.';
-        }
+    const reader = new FileReader();
+    reader.onload = function(event) {
+      const base64String = event.target.result.split(',')[1]; // Remove data:*/*;base64, part
+      const formData = new URLSearchParams();
+      formData.append('name', form.name.value);
+      formData.append('phone', form.phone.value);
+      formData.append('email', form.email.value);
+      formData.append('college', form.college.value);
+      formData.append('department', form.department.value);
+      formData.append('screenshot', base64String);
+      formData.append('screenshotType', screenshotFile.type);
+      formData.append('screenshotName', screenshotFile.name);
+
+      const endpoint = window.APP_CONFIG && window.APP_CONFIG.APPS_SCRIPT_URL;
+      if (!endpoint) {
+        formMessage.textContent = 'Configuration error: Apps Script endpoint not set.';
+        return;
+      }
+      fetch(endpoint, {
+        method: 'POST',
+        body: formData,
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
       })
-      .catch(() => {
-        formMessage.textContent = 'Submission failed. Please try again.';
-      });
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            form.querySelectorAll('input, select, button').forEach(el => el.disabled = true);
+            formMessage.textContent = '';
+            localStorage.setItem('submitted', 'true');
+            showThankYouModal();
+          } else {
+            formMessage.textContent = data.message || 'Submission failed. Please try again.';
+          }
+        })
+        .catch(() => {
+          formMessage.textContent = 'Submission failed. Please try again.';
+        });
+    };
+    reader.readAsDataURL(screenshotFile);
   });
 
   // Initial UI state
