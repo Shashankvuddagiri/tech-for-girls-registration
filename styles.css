@@ -73,4 +73,8 @@ progress {
   main {
     padding: 1rem 0.5rem;
   }
+}
+#submitBtn {
+  display: block;
+  margin: 1.5rem auto 0 auto;
 } 
