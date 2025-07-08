@@ -8,6 +8,48 @@
 </head>
 <body>
   <h1>Tech for Girls Community Registration</h1>
+  <main>
+    <form id="registrationForm" autocomplete="off">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" required />
+      </div>
+      <div class="form-group">
+        <label for="phone">Phone Number</label>
+        <input type="tel" id="phone" name="phone" required pattern="[0-9]{10,15}" />
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required />
+      </div>
+      <div class="form-group">
+        <label for="college">College/Department</label>
+        <select id="college" name="college" required>
+          <option value="">Select...</option>
+          <option value="CSE">CSE</option>
+          <option value="ECE">ECE</option>
+          <option value="EEE">EEE</option>
+          <option value="IT">IT</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="screenshot">Screenshot Upload</label>
+        <input type="file" id="screenshot" name="screenshot" accept="image/*,.pdf" required />
+      </div>
+      <div class="form-group share-group">
+        <button type="button" id="whatsappShare" class="share-btn">
+          Share on WhatsApp
+        </button>
+        <div class="share-progress">
+          <span id="shareCount">Click count: 0/5</span>
+          <progress id="shareProgress" value="0" max="5"></progress>
+        </div>
+      </div>
+      <button type="submit" id="submitBtn" disabled>Submit Registration</button>
+      <div id="formMessage" class="form-message"></div>
+    </form>
+  </main>
   <script src="app.js"></script>
 </body>
 </html> 
