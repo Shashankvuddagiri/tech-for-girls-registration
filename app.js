@@ -48,9 +48,82 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   let screenshotFile = null;
+  const screenshotPreview = document.createElement('div');
+  screenshotPreview.id = 'screenshotPreview';
+  screenshotInput.parentNode.appendChild(screenshotPreview);
+
   screenshotInput.addEventListener('change', function (e) {
     screenshotFile = e.target.files[0] || null;
+    screenshotPreview.innerHTML = '';
+    if (screenshotFile) {
+      if (screenshotFile.type.startsWith('image/')) {
+        const img = document.createElement('img');
+        img.style.maxWidth = '100%';
+        img.style.maxHeight = '120px';
+        img.alt = 'Screenshot Preview';
+        img.src = URL.createObjectURL(screenshotFile);
+        screenshotPreview.appendChild(img);
+      } else {
+        screenshotPreview.textContent = `Selected file: ${screenshotFile.name}`;
+      }
+    }
   });
+
+  // Live validation
+  const validators = {
+    name: v => v.trim().length > 0,
+    phone: v => /^\d{10,15}$/.test(v),
+    email: v => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v),
+    college: v => v.trim().length > 0,
+    department: v => v.trim().length > 0,
+    screenshot: () => !!screenshotFile
+  };
+  const errorMessages = {
+    name: 'Name is required.',
+    phone: 'Phone must be 10-15 digits.',
+    email: 'Enter a valid email address.',
+    college: 'College is required.',
+    department: 'Department is required.',
+    screenshot: 'Screenshot is required.'
+  };
+  function validateField(field) {
+    const value = field.type === 'file' ? '' : field.value;
+    const valid = validators[field.name](value);
+    let errorElem = field.parentNode.querySelector('.error-message');
+    if (!errorElem) {
+      errorElem = document.createElement('div');
+      errorElem.className = 'error-message';
+      field.parentNode.appendChild(errorElem);
+    }
+    if (!valid) {
+      errorElem.textContent = errorMessages[field.name];
+      field.classList.add('invalid');
+    } else {
+      errorElem.textContent = '';
+      field.classList.remove('invalid');
+    }
+    return valid;
+  }
+  const fields = ['name', 'phone', 'email', 'college', 'department'];
+  fields.forEach(name => {
+    const field = form[name];
+    field.addEventListener('input', () => {
+      validateField(field);
+      checkFormValidity();
+    });
+  });
+  screenshotInput.addEventListener('change', () => {
+    validateField(screenshotInput);
+    checkFormValidity();
+  });
+  function checkFormValidity() {
+    const allValid = fields.every(name => validateField(form[name])) && validators.screenshot();
+    if (allValid && shareCount >= maxShares) {
+      submitBtn.disabled = false;
+    } else {
+      submitBtn.disabled = true;
+    }
+  }
 
   form.addEventListener('submit', function (e) {
     e.preventDefault();
@@ -67,9 +140,12 @@ document.addEventListener('DOMContentLoaded', function () {
     formData.append('department', form.department.value);
     formData.append('screenshot', screenshotFile);
 
-    // TODO: Replace with your Google Apps Script endpoint URL
-    const endpoint = 'https://script.google.com/macros/s/AKfycbz8ufZaH0AbEpbaVC1_kIhJEzXY0LPCd5tvC0hJ5xmi0bvba3V0l4QONNVZyy2v2pM-6Q/exec';
-
+    // Use endpoint from config.js
+    const endpoint = window.APP_CONFIG && window.APP_CONFIG.APPS_SCRIPT_URL;
+    if (!endpoint) {
+      formMessage.textContent = 'Configuration error: Apps Script endpoint not set.';
+      return;
+    }
     fetch(endpoint, {
       method: 'POST',
       body: formData

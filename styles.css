@@ -62,12 +62,14 @@ progress {
   width: 120px;
   height: 12px;
   margin-top: 0.2rem;
+  transition: width 0.3s;
 }
 .form-message {
   margin-top: 1.2rem;
   font-size: 1.1rem;
   color: #059669;
   min-height: 1.5em;
+  transition: opacity 0.3s, color 0.3s;
 }
 @media (max-width: 600px) {
   main {
@@ -77,4 +79,27 @@ progress {
 #submitBtn {
   display: block;
   margin: 1.5rem auto 0 auto;
+}
+#screenshotPreview {
+  margin-top: 0.5rem;
+  min-height: 24px;
+}
+#screenshotPreview img {
+  border-radius: 6px;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.08);
+  transition: transform 0.2s;
+}
+#screenshotPreview img:hover {
+  transform: scale(1.04);
+}
+.error-message {
+  color: #ef4444;
+  font-size: 0.97em;
+  margin-top: 0.2em;
+  min-height: 1.2em;
+  transition: opacity 0.2s;
+}
+input.invalid, select.invalid {
+  border-color: #ef4444;
+  background: #fef2f2;
 } 
