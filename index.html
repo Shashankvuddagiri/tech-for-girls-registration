@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <h1>Tech for Girls Community Registration</h1>
+  <h1><center>Tech for Girls Community Registration</center></h1>
   <main>
     <form id="registrationForm" autocomplete="off">
       <div class="form-group">
@@ -23,15 +23,12 @@
         <input type="email" id="email" name="email" required />
       </div>
       <div class="form-group">
-        <label for="college">College/Department</label>
-        <select id="college" name="college" required>
-          <option value="">Select...</option>
-          <option value="CSE">CSE</option>
-          <option value="ECE">ECE</option>
-          <option value="EEE">EEE</option>
-          <option value="IT">IT</option>
-          <option value="Other">Other</option>
-        </select>
+        <label for="college">College</label>
+        <input type="text" id="college" name="college" required />
+      </div>
+      <div class="form-group">
+        <label for="department">Department</label>
+        <input type="text" id="department" name="department" required />
       </div>
       <div class="form-group">
         <label for="screenshot">Screenshot Upload</label>
@@ -46,7 +43,7 @@
           <progress id="shareProgress" value="0" max="5"></progress>
         </div>
       </div>
-      <button type="submit" id="submitBtn" disabled>Submit Registration</button>
+      <button type="submit" id="submitBtn" disabled><center>Submit Registration</center></button>
       <div id="formMessage" class="form-message"></div>
     </form>
   </main>
