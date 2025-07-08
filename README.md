@@ -23,7 +23,7 @@ A modern registration form for the Tech for Girls Community, featuring WhatsApp 
 
 ## Configuration
 
-Create a `config.js` file in the project root with the following content (replace the URL with your own if needed):
+Create a `config.js` file in the project root with the following content (replace the URL with your own):
 
 ```js
 // config.js
@@ -32,7 +32,7 @@ window.APP_CONFIG = {
 };
 ```
 
-**Important:** Add `config.js` to your `.gitignore` to avoid committing sensitive endpoints.
+**Important:** Add `config.js` to your `index.html` file.
 
 ## Setup
 1. Clone the repo
